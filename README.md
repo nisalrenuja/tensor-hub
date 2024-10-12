@@ -4,25 +4,25 @@ The AI Image Analyzer is a web application that allows users to upload an image 
 
 Features
 
-	•	Upload an image file for analysis
-	•	Analyze the image using the MobileNet model
-	•	View detailed predictions with confidence percentages
-	•	Download the analysis results as a text file
-	•	Responsive design with full mobile support
-	•	Uses Next.js and Tailwind CSS for efficient and fast front-end development
+    •	Upload an image file for analysis
+    •	Analyze the image using the MobileNet model
+    •	View detailed predictions with confidence percentages
+    •	Download the analysis results as a text file
+    •	Responsive design with full mobile support
+    •	Uses Next.js and Tailwind CSS for efficient and fast front-end development
 
 Demo
 
-Check out the live demo here: 
+Check out the live demo here:
 
 Table of Contents
 
-	•	Getting Started
-	•	Installation
-	•	Usage
-	•	Technologies Used
-	•	Contributing
-	•	License
+    •	Getting Started
+    •	Installation
+    •	Usage
+    •	Technologies Used
+    •	Contributing
+    •	License
 
 Getting Started
 
@@ -32,22 +32,20 @@ Prerequisites
 
 Ensure you have the following installed on your system:
 
-	•	Node.js (v14 or higher)
-	•	npm or yarn
+    •	Node.js (v14 or higher)
+    •	npm or yarn
 
 Installation
 
-	1.	Clone the repository:
+    1.	Clone the repository:
 
-git clone https://github.com/nisalrenuja/ai-web-app.git
+git clone https://github.com/nisalrenuja/tensor-hub.git
 
+    2.	Navigate into the project directory:
 
-	2.	Navigate into the project directory:
+cd tensor-hub
 
-cd ai-web-app
-
-
-	3.	Install dependencies:
+    3.	Install dependencies:
 
 npm install
 
@@ -55,11 +53,9 @@ or if you prefer yarn:
 
 yarn install
 
-
-
 Usage
 
-	1.	Run the development server:
+    1.	Run the development server:
 
 npm run dev
 
@@ -67,8 +63,7 @@ or
 
 yarn dev
 
-
-	2.	Open http://localhost:3000 in your browser to see the app in action.
+    2.	Open http://localhost:3000 in your browser to see the app in action.
 
 Build for Production
 
@@ -88,21 +83,21 @@ You can easily deploy this app to platforms like Vercel or Netlify by following 
 
 Technologies Used
 
-	•	Next.js - React framework for server-side rendering
-	•	Tailwind CSS - Utility-first CSS framework for styling
-	•	TensorFlow.js - Machine learning in the browser
-	•	MobileNet - Pre-trained image classification model
-	•	Lucide Icons - Simple and beautiful SVG icons
-	•	React - Front-end JavaScript library
+    •	Next.js - React framework for server-side rendering
+    •	Tailwind CSS - Utility-first CSS framework for styling
+    •	TensorFlow.js - Machine learning in the browser
+    •	MobileNet - Pre-trained image classification model
+    •	Lucide Icons - Simple and beautiful SVG icons
+    •	React - Front-end JavaScript library
 
 Contributing
 
 If you’d like to contribute to this project, please follow the steps below:
 
-	1.	Fork the repository.
-	2.	Create a new branch for your feature/bugfix.
-	3.	Make your changes and test thoroughly.
-	4.	Submit a pull request explaining your changes.
+    1.	Fork the repository.
+    2.	Create a new branch for your feature/bugfix.
+    3.	Make your changes and test thoroughly.
+    4.	Submit a pull request explaining your changes.
 
 License
 
