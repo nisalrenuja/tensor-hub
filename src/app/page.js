@@ -207,7 +207,8 @@ export default function Component() {
           </p>
           <div className="flex space-x-4">
             <a
-              href="#"
+              href="https://github.com/nisalrenuja/tensor-hub"
+              target="_blank"
               className="text-gray-600 dark:text-gray-400 hover:text-gray-900"
             >
               <Github className="w-5 h-5" />
