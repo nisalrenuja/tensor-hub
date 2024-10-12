@@ -97,8 +97,11 @@ export default function Component() {
       <header className="border-b dark:border-gray-700">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-black dark:text-white">
-            AI Image Analyzer
+            Tensor Hub
           </h1>
+          <p className="hidden md:block">
+            A central hub for AI-powered analysis using TensorFlow.js models
+          </p>
         </div>
       </header>
 
@@ -161,7 +164,7 @@ export default function Component() {
                         key={index}
                         className="grid grid-cols-3 items-center w-full gap-1"
                       >
-                        <div className="font-semibold">
+                        <div className="font-xs">
                           {pred.className}
                           <a
                             href={`https://en.wikipedia.org/wiki/${pred.className}`}
@@ -200,8 +203,7 @@ export default function Component() {
       <footer className="border-t dark:border-gray-700">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            © 2024 AI Image Analyzer. Design & Developed By Nisal Renuja
-            Palliyaguru.
+            © 2024 Tensor Hub. Design & Developed By Nisal Renuja Palliyaguru.
           </p>
           <div className="flex space-x-4">
             <a
