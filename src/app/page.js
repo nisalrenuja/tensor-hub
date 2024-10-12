@@ -16,19 +16,19 @@ export default function Component() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState(null);
-  const [modelType, setModelType] = useState("mobilenet");
 
   useEffect(() => {
     const loadTensorFlowModel = async () => {
       try {
-        const loadedModel = await loadModel(modelType);
+        const loadedModel = await loadModel();
         setModel(loadedModel);
       } catch (error) {
         console.error("Error loading the model:", error);
+        setError("Failed to load the model. Please try again later.");
       }
     };
     loadTensorFlowModel();
-  }, [modelType]);
+  }, []);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -142,6 +142,8 @@ export default function Component() {
                     src={imagePreview}
                     alt="Preview"
                     className="max-w-full h-auto rounded-lg"
+                    width={500}
+                    height={500}
                   />
                 </div>
               )}
@@ -190,18 +192,6 @@ export default function Component() {
                   </Button>
                 </div>
               )}
-
-              {/* Model Selection */}
-              <div className="mt-4">
-                <h3 className="font-semibold mb-2">Select Model:</h3>
-                <select
-                  onChange={(e) => setModelType(e.target.value)}
-                  className="form-select w-full sm:w-auto"
-                >
-                  <option value="mobilenet">MobileNet</option>
-                  <option value="inception">Inception</option>
-                </select>
-              </div>
             </div>
           </CardContent>
         </Card>
