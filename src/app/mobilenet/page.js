@@ -2,12 +2,11 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import ImageUploader from "@/components/pages/coco-ssd/ImageUploader";
 import { Progress } from "@/components/ui/progress";
-import { Upload, Github } from "lucide-react";
+import { Github } from "lucide-react";
 import { loadModel, loadImage } from "@/utils/imageProcessing";
 import Image from "next/image";
 import Header from "@/components/common/Header";
