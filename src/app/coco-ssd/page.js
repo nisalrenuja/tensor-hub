@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
 import { Upload, Zap } from "lucide-react";
+import Image from "next/image";
 
 export default function ObjectDetection() {
   const canvasRef = useRef(null);
@@ -116,7 +117,7 @@ export default function ObjectDetection() {
           <div className="relative aspect-square">
             {uploadedImage && (
               <>
-                <img
+                <Image
                   ref={imageRef}
                   src={uploadedImage}
                   alt="Uploaded"
