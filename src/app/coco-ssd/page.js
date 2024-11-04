@@ -11,7 +11,6 @@ import ImageUploader from "@/components/pages/coco-ssd/ImageUploader";
 import DetectedObjectsList from "@/components/pages/coco-ssd/DetectedObjectsList";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
-import { Github } from "lucide-react";
 
 export default function ObjectDetection() {
   const canvasRef = useRef(null);
@@ -97,61 +96,65 @@ export default function ObjectDetection() {
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900">
       <Header />
-      <Card className="w-full max-w-3xl mx-auto">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">
-            COCO-SSD Model
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {loadingState.loading && loadingState.progress < 100 && (
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Loading model...</p>
-              <Progress value={loadingState.progress} className="w-full" />
+      <main className="flex-grow container mx-auto px-4 py-8">
+        <Card className="w-full max-w-3xl mx-auto">
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold text-center">
+              COCO-SSD Model
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {loadingState.loading && loadingState.progress < 100 && (
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">
+                  Loading model...
+                </p>
+                <Progress value={loadingState.progress} className="w-full" />
+              </div>
+            )}
+
+            {error && (
+              <Alert variant="destructive">
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <ImageUploader
+                handleFileChange={handleFileChange}
+                startDetection={startDetection}
+                isDisabled={!uploadedImage || loadingState.loading}
+              />
+
+              <div className="relative aspect-square">
+                {uploadedImage && (
+                  <>
+                    <Image
+                      ref={imageRef}
+                      src={uploadedImage}
+                      alt="Uploaded"
+                      height={400}
+                      width={400}
+                      className="object-cover rounded-lg"
+                    />
+                    <canvas
+                      ref={canvasRef}
+                      width={400}
+                      height={400}
+                      className="absolute top-0 left-0 w-full h-full"
+                    />
+                  </>
+                )}
+              </div>
             </div>
-          )}
 
-          {error && (
-            <Alert variant="destructive">
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <ImageUploader
-              handleFileChange={handleFileChange}
-              startDetection={startDetection}
-              isDisabled={!uploadedImage || loadingState.loading}
-            />
-
-            <div className="relative aspect-square">
-              {uploadedImage && (
-                <>
-                  <Image
-                    ref={imageRef}
-                    src={uploadedImage}
-                    alt="Uploaded"
-                    height={400}
-                    width={400}
-                    className="object-cover rounded-lg"
-                  />
-                  <canvas
-                    ref={canvasRef}
-                    width={400}
-                    height={400}
-                    className="absolute top-0 left-0 w-full h-full"
-                  />
-                </>
-              )}
-            </div>
-          </div>
-
-          {detectedObjects.length > 0 && (
-            <DetectedObjectsList detectedObjects={detectedObjects} />
-          )}
-        </CardContent>
-      </Card>
+            {detectedObjects.length > 0 && (
+              <DetectedObjectsList detectedObjects={detectedObjects} />
+            )}
+          </CardContent>
+        </Card>
+      </main>
       <Footer />
     </div>
   );

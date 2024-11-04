@@ -12,28 +12,30 @@ import { ArrowRight, Brain, Camera, Mic, FileText } from "lucide-react";
 const models = [
   {
     title: "MobileNet",
-    description: "Classify images into predefined categories",
-    icon: Camera,
+    description:
+      "A lightweight, efficient deep learning model designed for mobile and embedded devices, optimized for tasks like image classification and object detection.",
+    // icon: Camera,
     link: "/mobilenet",
   },
   {
-    title: "Natural Language Processing",
-    description: "Process and analyze human language",
-    icon: FileText,
-    link: "/models/nlp",
+    title: "COCO-SSD",
+    description:
+      "An object detection model trained on the COCO dataset, capable of identifying and localizing multiple objects in images in real-time.",
+    // icon: FileText,
+    link: "/coco-ssd",
   },
-  {
-    title: "Speech Recognition",
-    description: "Convert spoken language into text",
-    icon: Mic,
-    link: "/models/speech-recognition",
-  },
-  {
-    title: "Neural Network",
-    description: "Build and train custom neural networks",
-    icon: Brain,
-    link: "/models/neural-network",
-  },
+  // {
+  //   title: "Speech Recognition",
+  //   description: "Convert spoken language into text",
+  //   icon: Mic,
+  //   link: "/models/speech-recognition",
+  // },
+  // {
+  //   title: "Neural Network",
+  //   description: "Build and train custom neural networks",
+  //   icon: Brain,
+  //   link: "/models/neural-network",
+  // },
 ];
 
 export default function TensorFlowModels() {
@@ -43,9 +45,9 @@ export default function TensorFlowModels() {
         {models.map((model, index) => (
           <Card key={index} className="flex flex-col">
             <CardHeader>
-              <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-4">
+              {/* <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-4">
                 <model.icon className="w-6 h-6 text-primary-foreground" />
-              </div>
+              </div> */}
               <CardTitle>{model.title}</CardTitle>
               <CardDescription>{model.description}</CardDescription>
             </CardHeader>

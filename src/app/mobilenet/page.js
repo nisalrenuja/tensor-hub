@@ -4,6 +4,8 @@ import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import ImageUploader from "@/components/pages/coco-ssd/ImageUploader";
 import { Progress } from "@/components/ui/progress";
 import { Upload, Github } from "lucide-react";
 import { loadModel, loadImage } from "@/utils/imageProcessing";
@@ -18,15 +20,22 @@ export default function MobileNet() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState(null);
+  const [loadingState, setLoadingState] = useState({
+    loading: true,
+    progress: 0,
+  });
 
   useEffect(() => {
     const loadTensorFlowModel = async () => {
       try {
+        setLoadingState({ loading: true, progress: 10 });
         const loadedModel = await loadModel();
         setModel(loadedModel);
+        setLoadingState({ loading: false, progress: 100 });
       } catch (error) {
         console.error("Error loading the model:", error);
         setError("Failed to load the model. Please try again later.");
+        setLoadingState({ loading: false, progress: 100 });
       }
     };
     loadTensorFlowModel();
@@ -98,96 +107,93 @@ export default function MobileNet() {
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900">
       <Header />
       <main className="flex-grow container mx-auto px-4 py-8">
-        <Card className="max-w-md mx-auto sm:max-w-full md:max-w-md lg:max-w-lg">
+        <Card className="w-full max-w-3xl mx-auto">
           <CardHeader>
-            <CardTitle>MobileNet Model</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center">
+              MobileNet Model
+            </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-2">
-                <Input
-                  type="file"
-                  id="image-upload"
-                  onChange={handleFileChange}
-                  className="flex-grow"
-                />
-                <Button
-                  onClick={handleAnalyzeClick}
-                  disabled={isAnalyzing}
-                  className="w-full sm:w-auto"
-                >
-                  {isAnalyzing ? (
-                    <div className="flex items-center">
-                      <span className="spinner-border animate-spin inline-block w-4 h-4 border-4 rounded-full"></span>
-                      <span className="ml-2">Analyzing...</span>
-                    </div>
-                  ) : (
-                    <>
-                      <Upload className="w-4 h-4 mr-2" />
-                      Analyze
-                    </>
-                  )}
+          <CardContent className="space-y-4">
+            {loadingState.loading && loadingState.progress < 100 && (
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">
+                  Loading model...
+                </p>
+                <Progress value={loadingState.progress} className="w-full" />
+              </div>
+            )}
+
+            {error && (
+              <Alert variant="destructive">
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <ImageUploader
+                handleFileChange={handleFileChange}
+                startDetection={handleAnalyzeClick}
+                isDisabled={!imagePreview || loadingState.loading}
+              />
+
+              <div className="relative aspect-square">
+                {imagePreview && (
+                  <>
+                    <Image
+                      src={imagePreview}
+                      alt="Preview"
+                      className="object-cover rounded-lg"
+                      width={400}
+                      height={400}
+                    />
+                  </>
+                )}
+              </div>
+            </div>
+
+            {isAnalyzing && <Progress value={50} className="w-full" />}
+
+            {predictions.length > 0 && (
+              <div className="mt-4">
+                <h3 className="font-semibold mb-2">Results:</h3>
+                <ul className="space-y-2">
+                  {predictions.map((pred, index) => (
+                    <li
+                      key={index}
+                      className="grid grid-cols-3 items-center w-full gap-1"
+                    >
+                      <div className="font-xs">
+                        {pred.className}
+                        <a
+                          href={`https://en.wikipedia.org/wiki/${pred.className}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-blue-500 ml-2"
+                        >
+                          (Learn More)
+                        </a>
+                      </div>
+
+                      <div className="w-full">
+                        <Progress
+                          value={pred.probability * 100}
+                          className="w-full"
+                        />
+                      </div>
+
+                      <div className="text-right font-mono">
+                        {(pred.probability * 100).toFixed(2)}%
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+
+                <Button onClick={downloadResults} className="mt-4 w-full">
+                  Download Results
                 </Button>
               </div>
-
-              {imagePreview && (
-                <div className="mt-4">
-                  <h3 className="font-semibold mb-2">Image Preview:</h3>
-                  <Image
-                    src={imagePreview}
-                    alt="Preview"
-                    className="max-w-full h-auto rounded-lg"
-                    width={500}
-                    height={500}
-                  />
-                </div>
-              )}
-
-              {isAnalyzing && <Progress value={50} className="w-full" />}
-
-              {error && <p className="text-red-600 mt-2">{error}</p>}
-
-              {predictions.length > 0 && (
-                <div className="mt-4">
-                  <h3 className="font-semibold mb-2">Results:</h3>
-                  <ul className="space-y-2">
-                    {predictions.map((pred, index) => (
-                      <li
-                        key={index}
-                        className="grid grid-cols-3 items-center w-full gap-1"
-                      >
-                        <div className="font-xs">
-                          {pred.className}
-                          <a
-                            href={`https://en.wikipedia.org/wiki/${pred.className}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-blue-500 ml-2"
-                          >
-                            (Learn More)
-                          </a>
-                        </div>
-
-                        <div className="w-full">
-                          <Progress
-                            value={pred.probability * 100}
-                            className="w-full"
-                          />
-                        </div>
-
-                        <div className="text-right font-mono">
-                          {(pred.probability * 100).toFixed(2)}%
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Button onClick={downloadResults} className="mt-4 w-full">
-                    Download Results
-                  </Button>
-                </div>
-              )}
-            </div>
+            )}
           </CardContent>
         </Card>
       </main>
