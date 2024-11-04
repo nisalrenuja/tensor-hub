@@ -3,12 +3,15 @@
 import { useState, useEffect, useRef } from "react";
 import * as cocoSsd from "@tensorflow-models/coco-ssd";
 import "@tensorflow/tfjs";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
-import { Upload, Zap } from "lucide-react";
 import Image from "next/image";
+import ImageUploader from "@/components/pages/coco-ssd/ImageUploader";
+import DetectedObjectsList from "@/components/pages/coco-ssd/DetectedObjectsList";
+import Header from "@/components/common/Header";
+import Footer from "@/components/common/Footer";
+import { Github } from "lucide-react";
 
 export default function ObjectDetection() {
   const canvasRef = useRef(null);
@@ -40,8 +43,14 @@ export default function ObjectDetection() {
   const handleFileChange = (event) => {
     const file = event.target.files?.[0];
     if (file) {
+      setUploadedImage(null);
+      setDetectedObjects([]);
+      setError(null);
+
       const reader = new FileReader();
-      reader.onload = () => setUploadedImage(reader.result);
+      reader.onload = () => {
+        setUploadedImage(reader.result);
+      };
       reader.readAsDataURL(file);
     }
   };
@@ -86,111 +95,64 @@ export default function ObjectDetection() {
   };
 
   return (
-    <Card className="w-full max-w-3xl mx-auto">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold text-center">
-          Object Detection
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {loadingState.loading && loadingState.progress < 100 && (
-          <div className="space-y-2">
-            <p className="text-sm text-muted-foreground">Loading model...</p>
-            <Progress value={loadingState.progress} className="w-full" />
+    <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900">
+      <Header />
+      <Card className="w-full max-w-3xl mx-auto">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-center">
+            COCO-SSD Model
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {loadingState.loading && loadingState.progress < 100 && (
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">Loading model...</p>
+              <Progress value={loadingState.progress} className="w-full" />
+            </div>
+          )}
+
+          {error && (
+            <Alert variant="destructive">
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <ImageUploader
+              handleFileChange={handleFileChange}
+              startDetection={startDetection}
+              isDisabled={!uploadedImage || loadingState.loading}
+            />
+
+            <div className="relative aspect-square">
+              {uploadedImage && (
+                <>
+                  <Image
+                    ref={imageRef}
+                    src={uploadedImage}
+                    alt="Uploaded"
+                    height={400}
+                    width={400}
+                    className="object-cover rounded-lg"
+                  />
+                  <canvas
+                    ref={canvasRef}
+                    width={400}
+                    height={400}
+                    className="absolute top-0 left-0 w-full h-full"
+                  />
+                </>
+              )}
+            </div>
           </div>
-        )}
 
-        {error && (
-          <Alert variant="destructive">
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
-        <div className="grid gap-4 md:grid-cols-2">
-          <ImageUploader
-            handleFileChange={handleFileChange}
-            startDetection={startDetection}
-            isDisabled={!uploadedImage || loadingState.loading}
-          />
-
-          <div className="relative aspect-square">
-            {uploadedImage && (
-              <>
-                <Image
-                  ref={imageRef}
-                  src={uploadedImage}
-                  alt="Uploaded"
-                  className="object-cover rounded-lg"
-                />
-                <canvas
-                  ref={canvasRef}
-                  width={400}
-                  height={400}
-                  className="absolute top-0 left-0 w-full h-full"
-                />
-              </>
-            )}
-          </div>
-        </div>
-
-        {detectedObjects.length > 0 && (
-          <DetectedObjectsList detectedObjects={detectedObjects} />
-        )}
-      </CardContent>
-    </Card>
+          {detectedObjects.length > 0 && (
+            <DetectedObjectsList detectedObjects={detectedObjects} />
+          )}
+        </CardContent>
+      </Card>
+      <Footer />
+    </div>
   );
 }
-
-const ImageUploader = ({ handleFileChange, startDetection, isDisabled }) => (
-  <div className="space-y-4">
-    <div className="flex items-center justify-center w-full">
-      <label
-        htmlFor="image-upload"
-        className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-      >
-        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-          <Upload className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" />
-          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-            <span className="font-semibold">Click to upload</span> or drag and
-            drop
-          </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            PNG, JPG or GIF (MAX. 800x400px)
-          </p>
-        </div>
-        <input
-          id="image-upload"
-          type="file"
-          className="hidden"
-          onChange={handleFileChange}
-          accept="image/*"
-        />
-      </label>
-    </div>
-
-    <Button onClick={startDetection} disabled={isDisabled} className="w-full">
-      <Zap className="w-4 h-4 mr-2" />
-      Start Detection
-    </Button>
-  </div>
-);
-
-const DetectedObjectsList = ({ detectedObjects }) => (
-  <div className="mt-4">
-    <h2 className="text-lg font-semibold mb-2">Detected Objects:</h2>
-    <ul className="space-y-2">
-      {detectedObjects.map((obj, index) => (
-        <li
-          key={index}
-          className="flex items-center justify-between p-2 bg-gray-100 dark:bg-gray-800 rounded"
-        >
-          <span className="font-medium">{obj.class}</span>
-          <span className="text-sm text-muted-foreground">
-            {(obj.score * 100).toFixed(2)}%
-          </span>
-        </li>
-      ))}
-    </ul>
-  </div>
-);

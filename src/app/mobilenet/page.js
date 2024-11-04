@@ -96,11 +96,11 @@ export default function MobileNet() {
 
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900">
-      <Header /> {/* Use Header component here */}
+      <Header />
       <main className="flex-grow container mx-auto px-4 py-8">
         <Card className="max-w-md mx-auto sm:max-w-full md:max-w-md lg:max-w-lg">
           <CardHeader>
-            <CardTitle>Analyze Your Image</CardTitle>
+            <CardTitle>MobileNet Model</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
